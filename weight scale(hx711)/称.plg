@@ -1,0 +1,30 @@
+<html>
+<body>
+<pre>
+<h1>猩ision Build Log</h1>
+<h2>Project:</h2>
+D:\lwffolder\c51keil\weight scale(hx711)\備.uvproj
+Project File Date:  05/15/2016
+
+<h2>Output:</h2>
+Build target 'Target 1'
+compiling 備.c...
+備.C(1): warning C500: LICENSE ERROR (R208: RENEW LICENSE ID CODE (LIC))
+LCD12864.H(75): error C202: 'LCD_standby': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling 備.c...
+備.C(1): warning C500: LICENSE ERROR (R208: RENEW LICENSE ID CODE (LIC))
+LCD12864.H(75): error C202: 'LCD_standby': undefined identifier
+Target not created
+Build target 'Target 1'
+compiling 備.c...
+備.C(1): warning C500: LICENSE ERROR (R208: RENEW LICENSE ID CODE (LIC))
+linking...
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?INITPIC?備
+*** WARNING L16: UNCALLED SEGMENT, IGNORED FOR OVERLAY PROCESS
+    SEGMENT: ?PR?CLEARGDRAM?備
+Program Size: data=40.0 xdata=0 code=1138
+creating hex file from "備"...
+"備" - 0 Error(s), 3 Warning(s).

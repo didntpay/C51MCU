@@ -1,0 +1,153 @@
+C51 COMPILER V9.00   称                                                                    10/16/2016 10:57:57 PAGE 1   
+
+
+C51 COMPILER V9.00, COMPILATION OF MODULE 称
+OBJECT MODULE PLACED IN 称.OBJ
+COMPILER INVOKED BY: D:\keil4\C51\BIN\C51.EXE 称.c BROWSE DEBUG OBJECTEXTEND
+
+line level    source
+
+*** WARNING C500 IN LINE 1 OF 称.C: LICENSE ERROR (R208: RENEW LICENSE ID CODE (LIC))
+
+   1          /*there is a 128 gain for this chip, this program is using 64 gain 
+   2          chip# hx711.*/
+   3          #include<changyong2.h>
+   4          #include<lcd12864.h>
+   5          #include<intrins.h>
+   6          sbit scl=P1^4;
+   7          sbit sda=P1^3;
+   8          uchar flag;
+   9          uint buf[8]=(0);
+  10          uchar temp;
+  11          uint read();
+  12          
+  13          void splitnum(uint num);
+  14          void combine(uint x,uint num1);
+  15          void timer1init();
+  16          void lcddis(uchar add,uint count);
+  17          void main()
+  18          {
+  19   1              unsigned long zero,dat;
+  20   1              uint temp;
+  21   1              init();
+  22   1              timer1init(); 
+  23   1              for(temp=5;temp>0;temp--)
+  24   1              {
+  25   2                      zero=zero+read();// take the weight of items above the sensor.  
+  26   2              }
+  27   1              zero=zero/5;// take average.      
+  28   1                      
+  29   1              TR1=1;//timer1 activate
+  30   1              while(1)
+  31   1              {
+  32   2                      
+  33   2                      lcddis(0x80,4);
+  34   2                      if(flag==2)
+  35   2                      {
+  36   3                              flag=0;
+  37   3                              dat=read();
+  38   3                              dat=dat-zero;
+  39   3                              splitnum(dat);
+  40   3                              lcddis(0x80,4);
+  41   3                              dat=0;
+  42   3                              
+  43   3                      }                       
+  44   2              }                       
+  45   1      }
+  46          uint read()
+  47          {
+  48   1              uint ww;
+  49   1              unsigned long count;//variable for data.
+  50   1              sda=1;
+  51   1              _nop_();
+  52   1              scl=0;
+  53   1              _nop_();//1/4 of ns delay.
+  54   1              count=0;
+C51 COMPILER V9.00   称                                                                    10/16/2016 10:57:57 PAGE 2   
+
+  55   1              while(sda);//if sda is busy then wait!
+  56   1              for(ww=0;ww<24;ww++)
+  57   1              {
+  58   2                      count=count<<1;//transfering data from H to L.
+  59   2                      scl=1;
+  60   2                      _nop_();
+  61   2                      scl=0;
+  62   2                      if(sda)
+  63   2                      {
+  64   3                              count++;
+  65   3                      }
+  66   2                      
+  67   2                              
+  68   2              }
+  69   1              scl=1;
+  70   1              _nop_();
+  71   1              scl=0;
+  72   1              
+  73   1              count=~(count-1);//convert 2's complement into binary coded decimal.
+  74   1              count=count>>8;//ignore
+  75   1              return count;
+  76   1      }
+  77          
+  78          void splitnum(uint num)//take a number with multiple digits sperate it and put it into buf.  
+  79          {
+  80   1              uint num1,tt;   
+  81   1              uint i;
+  82   1              tt=0;
+  83   1              for(i=0;i<8;i++)
+  84   1              {
+  85   2                      buf[i]=0;                       
+  86   2              }
+  87   1              while(num>0)
+  88   1              {
+  89   2                      num1=num%10;
+  90   2                      combine(num1,tt);
+  91   2                      tt++;
+  92   2                      num=num/10;
+  93   2              }
+  94   1      
+  95   1              
+  96   1      }
+  97           void combine(uint x,uint num1)
+  98          {
+  99   1              buf[num1]=x;            
+ 100   1      }
+ 101          void timer1init()
+ 102          {
+ 103   1              TMOD|=0x10;
+ 104   1              TH1=(65536-50000)/256;        //给定初值，这里使用定时器50ms溢出
+ 105   1              TL1=(65536-50000)%256;
+ 106   1              EA=1;
+ 107   1              ET1=1;  
+ 108   1      }
+ 109          void lcddis(uchar add,uint count)
+ 110          {
+ 111   1              writecmd(add);
+ 112   1              for(count;count>0;count--)
+ 113   1              {
+ 114   2                      write_data(buf[count-1]+0x30);
+ 115   2              }
+ 116   1      }
+C51 COMPILER V9.00   称                                                                    10/16/2016 10:57:57 PAGE 3   
+
+ 117          
+ 118          void time1_hx() interrupt 3  
+ 119          {
+ 120   1              TF1=0;
+ 121   1              TH1=(65536-50000)/256;        //给定初值，这里使用定时器50ms溢出
+ 122   1              TL1=(65536-50000)%256;
+ 123   1              flag++;
+ 124   1      }
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    631    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =     18      17
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  1 WARNING(S),  0 ERROR(S)
